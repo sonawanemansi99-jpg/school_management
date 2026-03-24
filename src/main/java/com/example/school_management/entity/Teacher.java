@@ -1,6 +1,7 @@
 package com.example.school_management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Teacher extends Employee
 {
+    @NotBlank(message = "Subject is required")
     @Column(name = "subject", length = 50)
     private String subject;
 
+    @NotBlank(message = "Assigned class is required")
     @Column(name = "assigned_class", length = 20)
     private String assignedClass;
 

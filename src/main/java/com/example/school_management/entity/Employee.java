@@ -1,7 +1,6 @@
 package com.example.school_management.entity;
 
 import com.example.school_management.enums.Gender;
-import com.example.school_management.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -11,19 +10,18 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "employees")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
-public abstract class Employee extends BaseEntity
-{
+public abstract class Employee extends BaseEntity {
+
     @NotBlank(message = "Full name is required")
     @Column(name = "full_name", length = 50, nullable = false)
     private String fullName;
 
-    @Column(name = "email", length = 30, unique = true, nullable = false)
+    @Column(name = "email", length = 30,unique = true, nullable = false)
     @Email(message = "Invalid email format")
     private String email;
 
@@ -68,36 +66,34 @@ public abstract class Employee extends BaseEntity
     @Column(name = "joining_date", nullable = false)
     private LocalDate joiningDate;
 
-    @Column(name = "aadhar_no", length = 12, nullable = false, unique = true)
+    @Column(name = "aadhar_no", length = 12, nullable = false)
     @Pattern(regexp = "^[0-9]{12}$", message = "Aadhar number must be 12 digits")
     private String aadharNo;
 
-    @Column(name = "pan_no", length = 10, nullable = false, unique = true)
+    @Column(name = "pan_no", length = 10, nullable = false)
     @Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Invalid PAN format (e.g. ABCDE1234F)")
     private String panNo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 10, nullable = false)
-    @NotNull(message = "Status is required")
-    private Status status;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @NotBlank(message = "Aadhar photo path is required")
-    @Column(name = "aadhar_photo", length = 100, nullable = false)
+    @Column(name = "aadhar_photo_url", length = 100, nullable = false)
     private String aadharPhoto;
 
     @NotBlank(message = "PAN photo path is required")
-    @Column(name = "pan_photo", length = 100, nullable = false)
+    @Column(name = "pan_photo_url", length = 100, nullable = false)
     private String panPhoto;
 
     @NotBlank(message = "Degree certificate path is required")
-    @Column(name = "degree_certificate", length = 100, nullable = false)
+    @Column(name = "degree_certificate_url", length = 100, nullable = false)
     private String degreeCertificate;
 
-    @Column(name = "resignation_letter", length = 100)
+    @Column(name = "resignation_letter_url", length = 100)
     private String resignationLetter;
 
     @NotBlank(message = "Resume path is required")
-    @Column(name = "resume", length = 100, nullable = false)
+    @Column(name = "resume_url", length = 100, nullable = false)
     private String resume;
 
     @PositiveOrZero
