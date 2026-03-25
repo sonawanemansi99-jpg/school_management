@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,24 +15,18 @@ import org.springframework.web.bind.annotation.*;
 public class TeacherController {
 
     private final TeacherRepo teacherRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<?> createTeacher(@Valid @RequestBody Teacher teacher) {
-        if (teacherRepository.existsByEmail(teacher.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Email already exists");
-        }
-
         try {
+            teacher.setPassword(passwordEncoder.encode(teacher.getPassword()));
             Teacher savedTeacher = teacherRepository.save(teacher);
-            savedTeacher.setPassword(null);
             return ResponseEntity.ok(savedTeacher);
-
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity
                     .badRequest()
-                    .body("Duplicate entry (Email or Mobile already exists)");
+                    .body("Something went wrong while saving: " + e.getMostSpecificCause().getMessage());
         }
     }
 }

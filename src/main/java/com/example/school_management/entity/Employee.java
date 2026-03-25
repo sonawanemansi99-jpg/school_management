@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import com.example.school_management.enums.Role;
 import java.time.LocalDate;
 
 @Entity
@@ -25,17 +27,16 @@ public abstract class Employee extends BaseEntity {
     @Email
     @NotBlank
     @Size(max = 50)
-    @Column(name = "email", length = 50, nullable = false)
+    @Column(unique=true ,name = "email", length = 50, nullable = false)
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 20)
-    @Column(name = "password", length = 20, nullable = false)
+    @Column(name = "password", length = 100, nullable = false)
     private String password;
 
     @NotBlank
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile must be 10 digits")
-    @Column(name = "mobile", length = 10, nullable = false)
+    @Column(unique =true ,name = "mobile", length = 10, nullable = false)
     private String mobile;
 
     @Enumerated(EnumType.STRING)
@@ -109,4 +110,8 @@ public abstract class Employee extends BaseEntity {
     @Max(50)
     @Column(name = "years_of_experience")
     private Integer yearsOfExperience;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 }
